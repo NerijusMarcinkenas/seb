@@ -18,6 +18,7 @@ public class CurrencyDataConfiguration : IEntityTypeConfiguration<CurrencyData>
             ob.Property(c => c.Code).HasMaxLength(Currency.CodeMaxLength);
             ob.Property(c => c.Name).HasMaxLength(Currency.NameMaxLength);
             ob.Property(c => c.Rate).HasColumnType("decimal(18, 4)");
+            ob.Property(c => c.DateStamp);
         });
        
     }

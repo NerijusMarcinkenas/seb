@@ -6,7 +6,6 @@ namespace Seb.Server.Infrastructure.Clients;
 public interface ICurrencyExchangeClient
 {
     Task<CurrencyResult> FetchCurrencyExchangeRates();
-    Task<IReadOnlyCollection<CurrencyResult>> FetchCurrencyExchangeRatesForNinetyDays();
 }
 
 public record CurrencyResult(IReadOnlyCollection<CurrencyRateModel> Rates, DateTime DateStamp);
@@ -53,12 +52,7 @@ public class CurrencyExchangeClient : ICurrencyExchangeClient
 
         return new CurrencyResult(resolvedCurrencies, timeStamp);
     }
-
-    public Task<IReadOnlyCollection<CurrencyResult>> FetchCurrencyExchangeRatesForNinetyDays()
-    {
-        throw new NotImplementedException();
-    }
-
+ 
     private readonly Dictionary<string, string> _currencyNameMap = new()
     {
         { "USD", "United States Dollar" },
