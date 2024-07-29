@@ -19,4 +19,14 @@ public class CurrencyController : ControllerBase
     {
         return await _mediator.Send(new GetLatestRates(), cancellationToken);
     }
+    
+    [HttpGet("exchange-rate")]
+    public async Task<ActionResult<decimal>> CalculateCurrenciesRate(
+        [FromQuery] CalculateCurrenciesRate request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(request, cancellationToken);
+        
+        return result.ToActionResult();
+    }
 }

@@ -1,3 +1,5 @@
+using Seb.Server.Domain.Common;
+
 namespace Seb.Server.Domain;
 
 public class Currency
@@ -79,5 +81,25 @@ public class CurrencyData
         }
 
         return new CurrencyData(currencies, dateStamp);
+    }
+
+    public Result<decimal> CalculateRate(string baseCurrency, string targetCurrency, decimal amount)
+    {
+        var baseCurrencyRate = Currencies.FirstOrDefault(c => c.Code == baseCurrency)?.Rate;
+        var targetCurrencyRate = Currencies.FirstOrDefault(c => c.Code == targetCurrency)?.Rate;
+
+        if (baseCurrencyRate == null)
+        {
+            return Result<decimal>.Error("Invalid base currency code");
+        }
+        if (targetCurrencyRate == null)
+        {
+            return Result<decimal>.Error("Invalid target currency code");
+        }
+
+        var amountInEur = amount / baseCurrencyRate.Value;
+        var amountInTargetCurrency = amountInEur * targetCurrencyRate.Value;
+
+        return new Result<decimal>(Math.Round(amountInTargetCurrency, 4, MidpointRounding.ToEven));
     }
 }

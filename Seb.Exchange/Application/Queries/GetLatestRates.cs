@@ -27,7 +27,7 @@ public class GetLatestRatesHandler : IRequestHandler<GetLatestRates, IReadOnlyCo
                     x.Name,
                     x.Code,
                     x.Rate,
-                    x.DateStamp))
+                    DateOnly.FromDateTime(x.DateStamp)))
             .ToList();
     }
 }
