@@ -1,0 +1,140 @@
+<div class="container">
+  <h1>Currency Converter</h1>
+
+  <div class="currency-selector-group">
+    <div class="currency-selector">
+      <nz-select
+        nzShowSearch="true"
+        nzAllowClear="true"
+        class="select"
+        [(ngModel)]="currencyFrom"
+      >
+        @for (currency of currencies(); track $index) {
+          <nz-option
+            nzLabel="{{ currency.code }} ({{ currency.name }})"
+            [nzValue]="currency.code"
+          ></nz-option>
+        }
+      </nz-select>
+
+      <div>
+        <nz-input-number
+          class="input-number"
+          [nzMin]="0"
+          [nzMax]="1000000"
+          [nzStep]="0.0001"
+          [nzPrecision]="4"
+          [nzPlaceHolder]="'Amount'"
+          [(ngModel)]="exchangeAmountFrom"
+        ></nz-input-number>
+      </div>
+    </div>
+
+    <div class="currency-selector">
+      <nz-select
+        nzShowSearch="true"
+        nzAllowClear="true"
+        class="select"
+        [(ngModel)]="currencyTo"
+      >
+        @for (currency of currencies(); track $index) {
+          <nz-option
+            nzLabel="{{ currency.code }} ({{ currency.name }})"
+            [nzValue]="currency.code"
+          ></nz-option>
+        }
+      </nz-select>
+
+      <div>
+        <nz-input-number
+          class="input-number"
+          [nzMin]="0"
+          [nzMax]="1000000"
+          [nzStep]="0.0001"
+          [nzPrecision]="4"
+          [nzPlaceHolder]="'Amount'"
+          [(ngModel)]="exchangeAmountTo"
+        ></nz-input-number>
+      </div>
+    </div>
+
+    <button nz-button nzType="primary" (click)="onCalculate()">
+      Calculate
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="error">
+      {{ error() }}
+    </div>
+  }
+</div>
+
+<div class="rates-container">
+  <h1>Latest rates against EUR</h1>
+
+  <nz-table [nzData]="currencies()!" #currenciesTable nzTableLayout="fixed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Rate</th>
+        <th>Last Updated</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of currenciesTable.data; track $index) {
+        <tr>
+          <td>{{ item.name }}</td>
+          <td>{{ item.code }}</td>
+          <td>{{ item.rate }}</td>
+          <td>{{ item.dateStamp }}</td>
+        </tr>
+      }
+    </tbody>
+  </nz-table>
+</div>
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .select {
+    width: inherit;
+  }
+
+  .currency-selector {
+    margin: 1rem;
+    width: 10rem;
+  }
+
+  .currency-selector-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+  }
+
+  .rates-container {
+    margin: 1rem;
+  }
+
+  .error {
+    color: red;
+    margin: 1rem;
+  }
+
+  .input-number {
+    margin-top: 1rem;
+    width: auto;
+  }
+
+  nz-form-item {
+    margin-bottom: 0;
+  }
+</style>
