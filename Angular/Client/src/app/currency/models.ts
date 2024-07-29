@@ -7,8 +7,11 @@ export interface Currency {
 }
 
 export interface CalculatedRates {
-  fromCurrency: string;
-  toCurrency: string;
+  baseCurrency: CurrencyAmount;
+  targetCurrency: CurrencyAmount;
+}
+
+export interface CurrencyAmount {
+  currency: string;
   amount: number;
-  rate: number;
 }

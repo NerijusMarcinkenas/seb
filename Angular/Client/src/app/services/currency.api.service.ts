@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Currency } from '../currency/models';
+import { CalculatedRates, Currency } from '../currency/models';
 
 @Injectable({
   providedIn: 'root',
@@ -14,18 +14,17 @@ export class CurrencyApiService {
   }
 
   calculateExchangeRate(
-    fromCurrency: string,
-    toCurrency: string,
-    amount: number,
+    baseCurrency: string,
+    targetCurrency: string,
+    baseAmount: number,
   ) {
     const params = new HttpParams();
-    params.append('fromCurrency', fromCurrency);
-    params.append('toCurrency', toCurrency);
-    params.append('amount', amount);
+    params.append('baseCurrency', baseCurrency);
+    params.append('targetCurrency', targetCurrency);
+    params.append('amount', baseAmount);
 
     return this.client.get<number>(
-      `${environment.apiUrl}/currency/exchange-rate`,
-      { params },
+      `${environment.apiUrl}/currency/exchange-rate?baseCurrency=${baseCurrency}&targetCurrency=${targetCurrency}&amount=${baseAmount}`,
     );
   }
 }

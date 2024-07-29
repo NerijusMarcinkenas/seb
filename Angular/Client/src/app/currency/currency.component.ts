@@ -30,43 +30,33 @@ export class CurrencyComponent {
   currencies = toSignal(this.currencyApi.getLatestRates());
   currenciesComputed = computed(() => this.currencies());
 
-  exchangeAmountFrom = signal<number | null>(null);
-  exchangeAmountTo = signal<number | null>(null);
-  currencyFrom = signal('');
-  currencyTo = signal('');
+  baseCurrencyAmount = signal<number | null>(null);
+  targetCurrencyAmount = signal<number | null>(null);
+  baseCurrency = signal('');
+  targetCurrency = signal('');
 
   error = signal('');
 
-  onFromChange(selectedCurrency: string, amount: number) {
-    this.currencyFrom.set(selectedCurrency);
-    this.exchangeAmountFrom.set(amount);
-  }
-
-  onToChange(selectedCurrency: string, amount: number) {
-    this.currencyTo.set(selectedCurrency);
-    this.exchangeAmountTo.set(amount);
-  }
-
   onCalculate() {
-    const fromCurrency = this.currencyFrom();
-    const toCurrency = this.currencyTo();
-    const amount = this.exchangeAmountFrom();
-    if (!fromCurrency && !toCurrency) {
+    const baseCurrency = this.baseCurrency();
+    const targetCurrency = this.targetCurrency();
+    const amount = this.baseCurrencyAmount();
+    if (!baseCurrency && !targetCurrency) {
       this.error.set('Please select a currency to convert from and to');
-    } else if (!fromCurrency && toCurrency) {
+    } else if (!baseCurrency && targetCurrency) {
       this.error.set('Please select a currency to convert from');
-    } else if (!toCurrency && fromCurrency) {
+    } else if (!targetCurrency && baseCurrency) {
       this.error.set('Please select a currency to convert to');
-    } else if (!amount) {
+    } else if (!amount || amount === 0) {
       this.error.set('Please enter an amount to convert');
-    } else if (fromCurrency && toCurrency && amount) {
+    } else if (baseCurrency && targetCurrency && amount) {
       this.error.set('');
 
       this.currencyApi
-        .calculateExchangeRate(fromCurrency, toCurrency, amount)
+        .calculateExchangeRate(baseCurrency, targetCurrency, amount)
         .subscribe({
-          next: (rate) => {
-            this.exchangeAmountTo.set(rate);
+          next: (calculatedAmount) => {
+            this.targetCurrencyAmount.set(calculatedAmount);
           },
         });
     }
